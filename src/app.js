@@ -20,9 +20,13 @@ app.get('/', (req, res) => {
          } else {
             const obj = JSON.parse(data).AJAY;
             return res.status(200).json({
-               countries: obj.map((cnt) => {
-                  return { countryName: cnt.countryName, cId: cnt.cId };
-               }),
+               countries: obj
+                  .map((cnt) => {
+                     return { countryName: cnt.countryName, cId: cnt.cId };
+                  })
+                  .sort((cn1, cn2) =>
+                     cn1.countryName.toLowerCase() < cn2.countryName.toLowerCase() ? -1 : 1
+                  ),
             });
          }
       });
@@ -46,12 +50,16 @@ app.get('/state/:cId', (req, res) => {
             const obj = JSON.parse(data).AJAY.filter(
                (cnt) => cnt.cId === parseInt(req.params.cId)
             )[0];
-            const obj2 = obj.states.map((st) => {
-               return {
-                  stateName: st.stateName,
-                  sId: st.sId,
-               };
-            });
+            const obj2 = obj.states
+               .map((st) => {
+                  return {
+                     stateName: st.stateName,
+                     sId: st.sId,
+                  };
+               })
+               .sort((cn1, cn2) =>
+                  cn1.stateName.toLowerCase() < cn2.stateName.toLowerCase() ? -1 : 1
+               );
             return res.status(200).json({
                states: obj2,
             });
@@ -81,7 +89,10 @@ app.get('/city/:sId', (req, res) => {
                   );
                })
                .flat(2)
-               .filter((itm) => itm !== null);
+               .filter((itm) => itm !== null)
+               .sort((cn1, cn2) =>
+                  cn1.cityName.toLowerCase() < cn2.cityName.toLowerCase() ? -1 : 1
+               );
             return res.status(200).json({
                cities: obj,
             });
