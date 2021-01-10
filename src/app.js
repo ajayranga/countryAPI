@@ -12,8 +12,12 @@ app.use(logger('dev'));
 app.get('/', (req, res) => {
    try {
       fs.readFile(__dirname + '/data.json', (err, data) => {
-         if (err) console.error(err);
-         else {
+         if (err) {
+            console.error(err);
+            return res.status(500).json({
+               err: { ...err, msg: err.message },
+            });
+         } else {
             const obj = JSON.parse(data).AJAY;
             return res.status(200).json({
                countries: obj.map((cnt) => {
@@ -30,7 +34,7 @@ app.get('/', (req, res) => {
    }
 });
 
-app.get('/:cId', (req, res) => {
+app.get('/state/:cId', (req, res) => {
    try {
       fs.readFile(__dirname + '/data.json', (err, data) => {
          if (err) {
@@ -61,7 +65,7 @@ app.get('/:cId', (req, res) => {
    }
 });
 
-app.get('/state/:sId', (req, res) => {
+app.get('/city/:sId', (req, res) => {
    try {
       fs.readFile(__dirname + '/data.json', (err, data) => {
          if (err) {
